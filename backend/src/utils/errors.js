@@ -24,4 +24,10 @@ class ConflictError extends HttpError {
   }
 }
 
-module.exports = { HttpError, ValidationError, NotFoundError, ConflictError };
+class ExternalServiceError extends HttpError {
+  constructor(status, message) {
+    super(status, message);
+  }
+}
+
+module.exports = { HttpError, ValidationError, NotFoundError, ConflictError, ExternalServiceError };
