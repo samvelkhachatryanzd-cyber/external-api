@@ -203,3 +203,35 @@ dt {
 dd {
   margin: 0;
 }
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 720px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.warnings {
+  margin: 0 0 12px;
+  padding: 8px 12px 8px 28px;
+  background: #fff8c5;
+  border: 1px solid #d4a72c;
+  border-radius: 6px;
+  font-size: 14px;
+}
