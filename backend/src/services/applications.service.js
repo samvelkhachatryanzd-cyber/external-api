@@ -1,8 +1,14 @@
 const { Application } = require('../models');
 const { NotFoundError, ConflictError } = require('../utils/errors');
 
-async function listApplications(filter) {
-  return Application.findAll({ where: filter, order: [['createdAt', 'DESC'], ['id', 'DESC']] });
+async function listApplications(filter, { page, limit }) {
+  const { rows, count } = await Application.findAndCountAll({
+    where: filter,
+    order: [['createdAt', 'DESC'], ['id', 'DESC']],
+    limit,
+    offset: (page - 1) * limit,
+  });
+  return { items: rows, total: count, page, limit };
 }
 
 async function getApplication(id) {

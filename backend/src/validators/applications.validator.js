@@ -2,16 +2,31 @@ const { ValidationError } = require('../utils/errors');
 
 const STATUSES = ['new', 'approved', 'rejected'];
 
-function id(raw) {
+const DEFAULT_LIMIT = 30;
+const MAX_LIMIT = 100;
+
+function positiveInteger(raw, name) {
   const value = Number(raw);
-  if (!Number.isInteger(value) || value < 1) throw new ValidationError('id must be a positive integer');
+  if (!Number.isInteger(value) || value < 1) throw new ValidationError(`${name} must be a positive integer`);
   return value;
 }
 
+function id(raw) {
+  return positiveInteger(raw, 'id');
+}
+
 function listQuery(query) {
-  if (query.status === undefined) return {};
-  if (!STATUSES.includes(query.status)) throw new ValidationError(`status must be one of: ${STATUSES.join(', ')}`);
-  return { status: query.status };
+  const filter = {};
+  if (query.status !== undefined) {
+    if (!STATUSES.includes(query.status)) throw new ValidationError(`status must be one of: ${STATUSES.join(', ')}`);
+    filter.status = query.status;
+  }
+
+  const page = query.page === undefined ? 1 : positiveInteger(query.page, 'page');
+  const limit = query.limit === undefined ? DEFAULT_LIMIT : positiveInteger(query.limit, 'limit');
+  if (limit > MAX_LIMIT) throw new ValidationError(`limit must be at most ${MAX_LIMIT}`);
+
+  return { filter, page, limit };
 }
 
 function text(body, field, max, errors, { required = true } = {}) {

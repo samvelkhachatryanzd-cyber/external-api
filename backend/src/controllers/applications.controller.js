@@ -3,7 +3,8 @@ const companyCheck = require('../services/companyCheck.service');
 const validate = require('../validators/applications.validator');
 
 async function list(req, res) {
-  res.json(await service.listApplications(validate.listQuery(req.query)));
+  const { filter, page, limit } = validate.listQuery(req.query);
+  res.json(await service.listApplications(filter, { page, limit }));
 }
 
 async function create(req, res) {
