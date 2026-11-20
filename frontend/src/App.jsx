@@ -1,29 +1,31 @@
-import { useState } from 'react';
+import { Navigate, Route, Routes, useLocation, useMatch, useNavigate } from 'react-router';
 import ApplicationPage from './ApplicationPage.jsx';
 import ApplicationsList from './ApplicationsList.jsx';
 import NewApplication from './NewApplication.jsx';
+import NotFound from './NotFound.jsx';
 
 export default function App() {
-  const [page, setPage] = useState({ name: 'list', status: 'new' });
-
-  const showList = () => setPage({ name: 'list', status: page.status || 'new' });
-  const open = (id) => setPage({ name: 'application', id, status: page.status });
+  const navigate = useNavigate();
+  const location = useLocation();
+  const onList = useMatch('/applications') !== null;
 
   return (
     <main>
       <header>
         <h1>Business onboarding</h1>
-        {page.name === 'list' && (
-          <button type="button" onClick={() => setPage({ name: 'new', status: page.status })}>
+        {onList && (
+          <button type="button" onClick={() => navigate('/applications/new', { state: { from: location.search } })}>
             New application
           </button>
         )}
       </header>
-      {page.name === 'list' && (
-        <ApplicationsList status={page.status} onStatus={(status) => setPage({ name: 'list', status })} onOpen={open} />
-      )}
-      {page.name === 'application' && <ApplicationPage id={page.id} onBack={showList} />}
-      {page.name === 'new' && <NewApplication onCreated={open} onCancel={showList} />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/applications" replace />} />
+        <Route path="/applications" element={<ApplicationsList />} />
+        <Route path="/applications/new" element={<NewApplication />} />
+        <Route path="/applications/:id" element={<ApplicationPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </main>
   );
 }

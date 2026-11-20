@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { apiJson } from './api.js';
 
 const FIELDS = [
@@ -12,7 +13,9 @@ const FIELDS = [
   { name: 'contactEmail', label: 'Contact email', type: 'email' },
 ];
 
-export default function NewApplication({ onCreated, onCancel }) {
+export default function NewApplication() {
+  const navigate = useNavigate();
+  const from = useLocation().state?.from || '';
   const [form, setForm] = useState(() => Object.fromEntries(FIELDS.map((field) => [field.name, ''])));
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -22,7 +25,7 @@ export default function NewApplication({ onCreated, onCancel }) {
     setSaving(true);
     try {
       const application = await apiJson('/applications', { method: 'POST', body: JSON.stringify(form) });
-      onCreated(application.id);
+      navigate(`/applications/${application.id}`, { replace: true, state: { from } });
     } catch (err) {
       setError(err.message);
       setSaving(false);
@@ -32,9 +35,7 @@ export default function NewApplication({ onCreated, onCancel }) {
   return (
     <>
       <p>
-        <button type="button" className="link" onClick={onCancel}>
-          Back to all applications
-        </button>
+        <Link to={`/applications${from}`}>Back to all applications</Link>
       </p>
       <form onSubmit={submit} className="card">
         <h2>New application</h2>

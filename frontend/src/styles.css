@@ -107,13 +107,6 @@ button.danger {
   border-color: #cf222e;
 }
 
-button.link {
-  background: none;
-  border: none;
-  padding: 0;
-  color: #0969da;
-}
-
 .tabs {
   display: flex;
   gap: 4px;
@@ -234,4 +227,15 @@ h3 {
   border: 1px solid #d4a72c;
   border-radius: 6px;
   font-size: 14px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.pager .status {
+  margin: 0;
 }

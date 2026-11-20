@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link, useLocation, useParams } from 'react-router';
 import { apiJson } from './api.js';
 import { dateTime } from './format.js';
 
@@ -24,7 +25,9 @@ function warningText({ field, applicant, register }) {
   return `${label} does not match: the application has ${shown(applicant)}, Companies House has ${shown(register)}`;
 }
 
-export default function ApplicationPage({ id, onBack }) {
+export default function ApplicationPage() {
+  const { id } = useParams();
+  const listUrl = `/applications${useLocation().state?.from || ''}`;
   const [application, setApplication] = useState(null);
   const [error, setError] = useState(null);
   const [note, setNote] = useState('');
@@ -81,9 +84,7 @@ export default function ApplicationPage({ id, onBack }) {
   return (
     <>
       <p>
-        <button type="button" className="link" onClick={onBack}>
-          Back to all applications
-        </button>
+        <Link to={listUrl}>Back to all applications</Link>
       </p>
 
       <section className="card">
